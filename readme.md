@@ -8,7 +8,7 @@ A reinforcement learning project where a bipedal agent learns to walk from scrat
 ## Stack
 - Farama Gymnasium — BipedalWalker-v3
 - Stable-Baselines3 — PPO
-- PyTorch + Matplotlib
+- PyTorch
 
 ## Installation
 ```bash
@@ -16,16 +16,12 @@ pip install -r requirements.txt
 ```
 NVIDIA GPU:
 ```bash
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install torch --index-url https://download.pytorch.org/whl/cu121
 ```
 
 ## Usage
 ```bash
-python train.py                                              # Train
-python demo.py trained                                       # Watch trained
-python demo.py untrained                                     # Watch untrained
-python demo.py checkpoint models/checkpoints/<name>          # Watch checkpoint
-python demo.py timelapse 10                                  # Timelapse
-python plot.py                                               # Learning curve
-python visualization.py compare                              # Comparison
+python train.py                # Train
+python demo.py                 # Watch trained
+python demo.py untrained       # Watch untrained
 ```

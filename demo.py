@@ -1,44 +1,27 @@
-import time
-import numpy as np
-from stable_baselines3 import PPO
-from config import BEST_MODEL_PATH, DEMO_EPISODES
-from environment import make_tabula_rasa_env
+# Shows the agent visually - trained or untrained
 
-def run(model_path=None, episodes=DEMO_EPISODES, max_seconds=None):
-    env = make_tabula_rasa_env(render_mode="human")
-    model = PPO.load(model_path) if model_path else PPO("MlpPolicy", env)
-    episode = 0
-    try:
-        while True:
-            obs, _ = env.reset()
-            total, done, start = 0, False, time.time()
-            episode += 1
-            while not done:
-                action, _ = model.predict(obs, deterministic=True)
-                obs, reward, terminated, truncated, _ = env.step(action)
-                total += reward
-                done = terminated or truncated
-                if max_seconds and time.time() - start > max_seconds:
-                    break
-            print(f"Episode {episode}: Reward = {total:.2f}")
-            if not max_seconds and episode >= episodes:
-                break
-    except KeyboardInterrupt:
-        print("\n⏹️  Stopped")
+import time       #track episode duration
+import gymnasium as gym #Simulation environment
+from stable_baselines3 import PPO #PPO algorithm
+from config import ENV_NAME, BEST_MODEL_PATH #Settings
+
+def run(model_path=None, episodes=3):
+    env = gym.make(ENV_NAME, render_mode="human") #Open visual window
+    model = PPO.load(model_path) if model_path else PPO("MlpPolicy", env) #Load trained or create new
+    for ep in range(1, episodes + 1):
+        obs, _ = env.reset()
+        total, done = 0, False
+        while not done:
+            action, _ = model.predict(obs, deterministic=True)
+            obs, reward, terminated, truncated, _ = env.step(action)
+            total += reward
+            done = terminated or truncated
+        print(f"Episode {ep}: Reward = {total:.2f}")
     env.close()
 
 if __name__ == "__main__":
     import sys
-    mode = sys.argv[1] if len(sys.argv) > 1 else "trained"
-    if mode == "trained":
-        run(BEST_MODEL_PATH)
-    elif mode == "untrained":
-        run()
-    elif mode == "checkpoint" and len(sys.argv) > 2:
-        run(model_path=sys.argv[2])
-    elif mode == "timelapse":
-        run(BEST_MODEL_PATH, max_seconds=int(sys.argv[2]) if len(sys.argv) > 2 else 10)
-    elif mode == "timelapse-checkpoint" and len(sys.argv) > 2:
-        run(sys.argv[2], max_seconds=int(sys.argv[3]) if len(sys.argv) > 3 else 10)
+    if len(sys.argv) > 1 and sys.argv[1] == "untrained":
+        run() #random agent - no training
     else:
-        print("Usage: python demo.py [trained|untrained|checkpoint <path>|timelapse <seconds>|timelapse-checkpoint <path> <seconds>]")
+        run(BEST_MODEL_PATH) # Best trained agent

@@ -1,18 +1,22 @@
-import os
-import torch
-import gymnasium as gym
-from stable_baselines3 import PPO
-from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
-from stable_baselines3.common.env_util import make_vec_env
-from config import ENV_NAME, MODEL_PATH, LOG_PATH, N_ENVS, TOTAL_TIMESTEPS, LEARNING_RATE, N_STEPS, BATCH_SIZE, N_EPOCHS, GAMMA, EVAL_FREQ, DEVICE
-from environment import make_tabula_rasa_env
+# Trener en PPO-agent i BipedalWalker-v3 fra scratch
+
+import os # Makes folders/directories
+import torch # Checks if GPU is available
+import gymnasium as gym #Simulates the environment
+from stable_baselines3 import PPO #PPO Algorithm
+from stable_baselines3.common.callbacks import (
+    EvalCallback, #Evaluates the model during training and saves the best one
+    CheckpointCallback #saves snapshots of the model at regular intervals
+    )
+from stable_baselines3.common.env_util import make_vec_env #runs multiple environments in parallel for faster training
+from config import * # all settings
 
 def train():
     os.makedirs("models/checkpoints", exist_ok=True)
     os.makedirs(LOG_PATH, exist_ok=True)
     print(f"🖥️  GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}")
 
-    env = make_vec_env(lambda: make_tabula_rasa_env(render_mode=None), n_envs=N_ENVS)
+    env = make_vec_env(ENV_NAME, n_envs=N_ENVS)
     model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH,
                 learning_rate=LEARNING_RATE, n_steps=N_STEPS, batch_size=BATCH_SIZE,
                 n_epochs=N_EPOCHS, gamma=GAMMA, device=DEVICE)

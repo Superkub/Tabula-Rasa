@@ -19,21 +19,21 @@ Tabula Rasa uses PPO to train a bipedal agent in BipedalWalker-v3 from scratch t
 - Two hidden layers, 64 neurons each, Tanh activation
 - Runs on GPU (CUDA) if available
 
+
 ## Data Flow
-```
 [BipedalWalker-v3] → observations (24) → [PPO Policy Network]
-                                                  ↓
-                    reward + observation ← [Environment] ← actions (4)
-                                                  ↓
-                    [Replay Buffer] → [PPO Update] → [Save Model]
-```
+↓
+reward + observation ← [Environment] ← actions (4)
+↓
+[Rollout Buffer] → [PPO Update] → [Save Model]
+
 
 ## Training Parameters
 | Parameter       | Value      |
 |-----------------|------------|
 | total_timesteps | 10 000 000 |
 | n_envs          | 8          |
-| learning_rate   | 3e-4       |
+| learning_rate   | 0.0003     |
 | n_steps         | 4096       |
 | batch_size      | 128        |
 | n_epochs        | 10         |
@@ -43,9 +43,6 @@ Tabula Rasa uses PPO to train a bipedal agent in BipedalWalker-v3 from scratch t
 - `config.py` — Settings
 - `train.py` — Training + checkpoints
 - `demo.py` — Watch agent
-- `plot.py` — Learning curve
-- `environment.py` — Custom UI wrapper
-- `visualization.py` — Comparison + progression
 
 ## GitHub
 [Link to repository]
