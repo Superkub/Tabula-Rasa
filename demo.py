@@ -1,13 +1,14 @@
-# Shows the agent visually - trained or untrained
-
-import time       #track episode duration
-import gymnasium as gym #Simulation environment
-from stable_baselines3 import PPO #PPO algorithm
-from config import ENV_NAME, BEST_MODEL_PATH #Settings
+# Shows the agent visually — trained or untrained
+from stable_baselines3 import PPO                  # PPO algorithm
+from config import BEST_MODEL_PATH, DEVICE         # Settings
+from sisyphus_env import SisyphusEnv               # Sisyphus environment class
 
 def run(model_path=None, episodes=3):
-    env = gym.make(ENV_NAME, render_mode="human") #Open visual window
-    model = PPO.load(model_path) if model_path else PPO("MlpPolicy", env) #Load trained or create new
+    env = SisyphusEnv(render_mode="human")         # Open visual window directly
+    if model_path:
+        model = PPO.load(model_path, device=DEVICE)  # Load trained model
+    else:
+        model = PPO("MlpPolicy", env, device=DEVICE) # Create new untrained model
     for ep in range(1, episodes + 1):
         obs, _ = env.reset()
         total, done = 0, False
@@ -22,6 +23,6 @@ def run(model_path=None, episodes=3):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "untrained":
-        run() #random agent - no training
+        run()                                      # Random agent — no training
     else:
-        run(BEST_MODEL_PATH) # Best trained agent
+        run(BEST_MODEL_PATH)                       # Best trained agent

@@ -1,20 +1,19 @@
-# Trener en PPO-agent i BipedalWalker-v3 fra scratch
-
-import os # Makes folders/directories
-import torch # Checks if GPU is available
-import gymnasium as gym #Simulates the environment
-from stable_baselines3 import PPO #PPO Algorithm
+# Trains a PPO agent from scratch
+import os                                          # Create directories
+import gymnasium as gym                            # Simulation environment
+import sisyphus_env                                # Registers the Sisyphus environment
+from stable_baselines3 import PPO                  # PPO algorithm
 from stable_baselines3.common.callbacks import (
-    EvalCallback, #Evaluates the model during training and saves the best one
-    CheckpointCallback #saves snapshots of the model at regular intervals
-    )
-from stable_baselines3.common.env_util import make_vec_env #runs multiple environments in parallel for faster training
-from config import * # all settings
+    EvalCallback,                                  # Evaluates the model during training and saves the best one
+    CheckpointCallback                             # Saves snapshots of the model at regular intervals
+)
+from stable_baselines3.common.env_util import make_vec_env  # Runs multiple environments in parallel for faster training
+from config import *                               # All settings
 
 def train():
     os.makedirs("models/checkpoints", exist_ok=True)
     os.makedirs(LOG_PATH, exist_ok=True)
-    print(f"🖥️  GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}")
+    print("🖥️  Running on CPU")
 
     env = make_vec_env(ENV_NAME, n_envs=N_ENVS)
     model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH,
