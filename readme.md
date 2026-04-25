@@ -38,3 +38,6 @@ Each phase loads the model from the previous phase and trains further.
 - `train.py` — Training with transfer learning and checkpoints
 - `demo.py` — Watch agent visually
 - `sisyphus_env.py` — Custom environment with boulder and slope
+- `test_bipedalwalker10m.py` — Test Phase 1 — walking
+- `test_sisyphuswalkerwithboulder20m.py` — Test Phase 2 — boulder
+- `test_sisyphuswalkerwithboulderslope30m.py` — Test Phase 3 — slope

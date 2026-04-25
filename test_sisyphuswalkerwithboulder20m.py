@@ -2,7 +2,7 @@ from stable_baselines3 import PPO
 from sisyphus_env import SisyphusEnv
 
 env = SisyphusEnv(render_mode="human")
-model = PPO.load("models/checkpoints/checkpoint_19900000_steps", device="cpu")
+model = PPO.load("models/checkpoints/checkpoint_20000000_steps", device="cpu")
 
 for ep in range(3):
     obs, _ = env.reset()

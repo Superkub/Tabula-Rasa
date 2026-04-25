@@ -124,7 +124,7 @@ Two modes:
 
 **Rendering flicker:** Double pygame.display.flip() caused screen blinking. Solved by using BipedalWalker's built-in drawlist for rendering boulder and slope instead of manual Pygame drawing.
 
-**Bouldery Density Adjustment:** > During Phase 2 (Flat ground), the boulder density was set to 1.5. However, when moving to Phase 3 (The Slope), this weight proved too high for the walker’s torque limits, causing it to fall backward. We tuned the density down to 0.5, balancing the physical challenge with the agent's ability to maintain balance while exerting upward force.
+**Boulder Density Adjustment:** > During Phase 2 (Flat ground), the boulder density was set to 1.5. However, when moving to Phase 3 (The Slope), this weight proved too high for the walker’s torque limits, causing it to fall backward. We tuned the density down to 0.5, balancing the physical challenge with the agent's ability to maintain balance while exerting upward force.
 
 **Surface friction tuning:** The default friction (0.8) was insufficient for the steep slope, causing the agent’s feet to slip and the boulder to slide back. We increased the slope friction to 2.0, providing necessary traction for the agent to exert force effectively.
 
@@ -135,22 +135,25 @@ Requirements: Python 3.12, gymnasium[box2d], stable-baselines3, tensorboard, tor
 Installation:
 pip install -r requirements.txt
 Running:
-python train.py                # Train (loads previous model, continues training)
-python demo.py                 # Watch trained agent with boulder and slope
-python demo.py untrained       # Watch untrained agent falling
+python train.py                                # Train (loads previous model, continues training)
+python demo.py                                 # Watch trained agent with boulder and slope
+python demo.py untrained                       # Watch untrained agent falling
 ## 7. Project Structure
 Tabula-Rasa
-├── config.py                  # Settings and hyperparameters
-├── train.py                   # Training with transfer learning and checkpoints
-├── demo.py                    # Watch agent visually (trained or untrained)
-├── sisyphus_env.py            # Custom environment with boulder and slope
-├── requirements.txt           # Python package dependencies
-├── readme.md                  # Project overview and usage
-├── TECHNICAL_DOCUMENTATION.md # This file
+├── config.py                                  # Settings and hyperparameters
+├── train.py                                   # Training with transfer learning and checkpoints
+├── demo.py                                    # Watch agent visually (trained or untrained)
+├── sisyphus_env.py                            # Custom environment with boulder and slope
+├── test_bipedalwalker10m.py                   # Test Phase 1 — walking
+├── test_sisyphuswalkerwithboulder20m.py       # Test Phase 2 — boulder (slope visible but untrained)
+├── test_sisyphuswalkerwithboulderslope30m.py  # Test Phase 3 — slope
+├── requirements.txt                           # Python package dependencies
+├── readme.md                                  # Project overview and usage
+├── TECHNICAL_DOCUMENTATION.md                 # This file
 ├── models/
-│   ├── bipedalwalker_ppo.zip  # Final trained model
-│   └── checkpoints/           # Model snapshots during training
-└── logs/                      # TensorBoard training logs
+│   ├── bipedalwalker_ppo.zip                  # Final trained model
+│   └── checkpoints/                           # Model snapshots during training
+└── logs/                                      # TensorBoard training logs
 
 ## 8. Stack
 
