@@ -12,6 +12,7 @@ class SisyphusEnv(BipedalWalker):
         self.prev_boulder_x = 0
         self.ramp_body = None
         self.ramp_visual = None
+        self.obstacle = None
         self.ramp_start = 0
         self.ramp_length = 30
         self.ramp_height = 10
@@ -27,14 +28,18 @@ class SisyphusEnv(BipedalWalker):
         if self.ramp_visual:
             self.world.DestroyBody(self.ramp_visual)
             self.ramp_visual = None
+        if self.obstacle:
+           self.world.DestroyBody(self.obstacle)
+           self.obstacle = None 
         super()._destroy()
 
     def reset(self, **kwargs):
         obs, info = super().reset(**kwargs)
         self._create_ramp()
         self._create_boulder()
+        self._create_obstacle()
         visual_bodies = [self.ramp_visual] if self.ramp_visual else []
-        self.drawlist = self.terrain + self.legs + [self.hull, self.boulder] + visual_bodies
+        self.drawlist = self.terrain + self.legs + [self.hull, self.boulder, self.obstacle, self.obstacle2, self.obstacle3, self.obstacle4] + visual_bodies
         return obs, info
 
     def _get_ramp_profile(self, steps=20):
@@ -103,7 +108,59 @@ class SisyphusEnv(BipedalWalker):
         self.boulder.color1 = (120, 110, 90)
         self.boulder.color2 = (80, 70, 55)
         self.prev_boulder_x = x
+    def _create_obstacle(self):
+        """Create a small static obstacle to increase environment difficulty."""
 
+        if self.obstacle:
+            self.world.DestroyBody(self.obstacle)
+            self.obstacle = None
+
+        x = self.hull.position[0] + 24
+        y = TERRAIN_HEIGHT + 0.10
+
+        self.obstacle = self.world.CreateStaticBody(
+            position=(x, y),
+            fixtures=fixtureDef(
+                shape=polygonShape(box=(0.2, 0.06)),
+                friction=1.0
+            )
+        )
+
+        self.obstacle.color1 = (160, 90, 70)
+        self.obstacle.color2 = (110, 60, 45)
+        
+        self.obstacle2 = self.world.CreateStaticBody(
+            position=(x + 3, y),
+            fixtures=fixtureDef(
+            shape=polygonShape(box=(0.2, 0.06)),
+            friction=1.0
+        )
+    )
+
+        self.obstacle2.color1 = (160, 90, 70)
+        self.obstacle2.color2 = (110, 60, 45)
+
+        self.obstacle3 = self.world.CreateStaticBody(
+            position=(x + 6, y),
+            fixtures=fixtureDef(
+            shape=polygonShape(box=(0.2, 0.06)),
+            friction=1.0
+        )
+    )
+
+        self.obstacle3.color1 = (160, 90, 70)
+        self.obstacle3.color2 = (110, 60, 45)
+
+        self.obstacle4 = self.world.CreateStaticBody(
+            position=(x + 9, y),
+            fixtures=fixtureDef(
+            shape=polygonShape(box=(0.2, 0.06)),
+            friction=1.0
+        )
+    )
+
+        self.obstacle4.color1 = (160, 90, 70)
+        self.obstacle4.color2 = (110, 60, 45)
     def step(self, action):
         obs, reward, terminated, truncated, info = super().step(action)
         if self.boulder:
